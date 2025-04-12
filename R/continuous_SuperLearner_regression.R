@@ -9,7 +9,8 @@
 #' @param SL.library Either a character vector of prediction algorithms or a
 #' list containing character vectors. A list of functions included in the
 #' SuperLearner package can be found with \code{SuperLearner::listWrappers()}.
-#' @param bw \code{NULL} or numeric value for bandwidth of kernel function (as standard deviations of the kernel).
+#' @param bw Numeric value or numeric vector for bandwidth of kernel function (as
+#' standard deviations of the kernel).
 #' @param bw.update logical indicating whether bandwidths should be computed
 #' every iteration or only on the first iteration.  Default is \code{TRUE},
 #' but \code{FALSE} may speed up the run time at the cost of accuracy.
@@ -22,6 +23,10 @@
 
 #Continuous SuperLearner
 continuousSuperLearner <- function(y, x, wy, SL.library, kernel, bw, bw.update, ...){
+  if (!is.numeric(bw)) {
+    stop("`bw` must be a numeric value or numeric vector.")
+  }
+
   newdata <- data.frame(x)
   colnames <- paste0("x", seq_len(ncol(newdata)))
   names(newdata) <- colnames
@@ -38,19 +43,18 @@ continuousSuperLearner <- function(y, x, wy, SL.library, kernel, bw, bw.update, 
   sl.preds <- predict.SuperLearner(object = sl, newdata = newdata, X = X, Y = Y,
                                    TRUE)$pred
 
-  if(length(bw) == 1 & inherits(bw, c("numeric", "integer"))){
+  if (length(bw) == 1) {
     bw <- as.list(rep(bw, times = sum(wy)))
   }
   else if(!bw.update){
-    if(inherits(bw, c("numeric", "integer"))){
-        bw <- sapply((1:length(y))[wy], jackknifeBandwidthSelection,
-                     bwGrid = bw,
-                     preds = sl.preds,
-                     y = y,
-                     delta = as.numeric(!wy),
-                     kernel = kernel)
-        bw <- as.list(bw)
-    }
+    bw <- sapply((1:length(y))[wy], jackknifeBandwidthSelection,
+                 bwGrid = bw,
+                 preds = sl.preds,
+                 y = y,
+                 delta = as.numeric(!wy),
+                 kernel = kernel)
+    bw <- as.list(bw)
+
     p <- parent.frame(2)
     p$args$bw <- bw
   }
