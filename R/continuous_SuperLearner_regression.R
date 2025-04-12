@@ -22,7 +22,7 @@
 
 
 #Continuous SuperLearner
-continuousSuperLearner <- function(y, x, wy, SL.library, kernel, bw, bw.update, ...){
+continuousSuperLearner <- function(y, x, wy, SL.library, kernel, bw, bw.update, ...) {
   if (!is.numeric(bw)) {
     stop("`bw` must be a numeric value or numeric vector.")
   }
@@ -34,6 +34,7 @@ continuousSuperLearner <- function(y, x, wy, SL.library, kernel, bw, bw.update, 
   X <- data.frame(x[!wy,])
   names(X) <- colnames
   Y <- y[!wy]
+  missing_indices <- which(wy)
 
   args <- c(list(Y = Y, X = X, family = stats::gaussian(),
                  SL.library = SL.library),
@@ -41,25 +42,22 @@ continuousSuperLearner <- function(y, x, wy, SL.library, kernel, bw, bw.update, 
   args$type <- NULL
   sl <- do.call(SuperLearner, args)
   sl.preds <- predict.SuperLearner(object = sl, newdata = newdata, X = X, Y = Y,
-                                   TRUE)$pred
+                                   onlySL = TRUE)$pred
 
   if (length(bw) == 1) {
     bw <- as.list(rep(bw, times = sum(wy)))
-  }
-  else if(!bw.update){
-    bw <- sapply((1:length(y))[wy], jackknifeBandwidthSelection,
+  } else if (!bw.update) {
+    bw <- sapply(missing_indices, jackknifeBandwidthSelection,
                  bwGrid = bw,
                  preds = sl.preds,
                  y = y,
                  delta = as.numeric(!wy),
                  kernel = kernel)
     bw <- as.list(bw)
-
     p <- parent.frame(2)
     p$args$bw <- bw
-  }
-  else{
-    bw <- sapply((1:length(y))[wy], jackknifeBandwidthSelection,
+  } else {
+    bw <- sapply(missing_indices, jackknifeBandwidthSelection,
                  bwGrid = bw,
                  preds = sl.preds,
                  y = y,
@@ -68,8 +66,10 @@ continuousSuperLearner <- function(y, x, wy, SL.library, kernel, bw, bw.update, 
     bw <- as.list(bw)
   }
 
+  imputed_values <- sapply(seq_along(missing_indices), localImputation,
+                           preds = sl.preds, y = y,
+                           delta = as.numeric(!wy),
+                           bw = bw, kernel = kernel)
 
-  sapply(1:sum(wy), localImputation, preds = sl.preds, y = y,
-         delta = as.numeric(!wy),
-         bw = bw, kernel = kernel)
+  return(imputed_values)
 }
