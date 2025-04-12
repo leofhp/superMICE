@@ -23,7 +23,8 @@ SuperLearner package can be found with \code{SuperLearner::listWrappers()}.}
 \item{kernel}{one of \code{gaussian}, \code{uniform}, or \code{triangular}.
 Specifies the kernel to be used in estimating the distribution around a missing value.}
 
-\item{bw}{\code{NULL} or numeric value for bandwidth of kernel function (as standard deviations of the kernel).}
+\item{bw}{Numeric value or numeric vector for bandwidth of kernel function (as
+standard deviations of the kernel).}
 
 \item{bw.update}{logical indicating whether bandwidths should be computed
 every iteration or only on the first iteration.  Default is \code{TRUE},

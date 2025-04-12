@@ -38,7 +38,8 @@ SuperLearner package.  See details below.}
 \item{kernel}{One of "gaussian", "uniform", "triangular".  Kernel function
 used to compute weights.}
 
-\item{bw}{NULL or numeric value for bandwidth of kernel function (as standard deviations of the kernel).}
+\item{bw}{Numeric value or numeric vector for bandwidth of kernel function (as
+standard deviations of the kernel).}
 
 \item{bw.update}{logical indicating whether bandwidths should be computed
 every iteration or only on the first iteration.  Default is \code{TRUE},
