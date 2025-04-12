@@ -18,10 +18,7 @@
 #' Specifies the kernel to be used in estimating the distribution around a missing value.
 #' @param ... further arguments passed to \code{SuperLearner()}.
 #' @return numeric vector of randomly drawn imputed values.
-#'
 
-
-#Continuous SuperLearner
 continuousSuperLearner <- function(y, x, wy, SL.library, kernel, bw, bw.update, ...) {
   if (!is.numeric(bw)) {
     stop("`bw` must be a numeric value or numeric vector.")

@@ -9,19 +9,19 @@
 #' @param y numeric vector of length \code{n} of observed values and imputed values.
 #' @return returns a single numeric value for the estimate of the jackknife variance.
 
-jackknifeVariance <- function(j, kernMatrix, delta, y){
+jackknifeVariance <- function(j, kernMatrix, delta, y) {
   n <- nrow(kernMatrix)
   m <- ncol(kernMatrix)
-  newKernMatrix <- kernMatrix[-j,]
+  newKernMatrix <- kernMatrix[-j, ]
   newDelta <- delta[-j]
   newy <- y[-j]
   newWeight.numerator <- newKernMatrix
   newWeight.denominator <- colSums(newWeight.numerator)
   newWeightMatrix <- newWeight.numerator / matrix(newWeight.denominator,
-                                              nrow = n - 1, ncol = m,
-                                              byrow = TRUE)
+                                                  nrow = n - 1, ncol = m,
+                                                  byrow = TRUE)
   pihat.jk <- colSums(newKernMatrix * newDelta) / colSums(newKernMatrix)
   muhat.jk <- colSums(newWeightMatrix * newDelta * newy) / pihat.jk
   mu2hat.jk <- colSums(newWeightMatrix * newDelta * newy^2) / pihat.jk
-  mu2hat.jk - muhat.jk^2
+  return(mu2hat.jk - muhat.jk^2)
 }
