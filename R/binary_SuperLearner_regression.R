@@ -48,11 +48,8 @@ binarySuperLearner = function(y, x, wy, SL.library, ...){
   args = c(list(Y = Y, X = X, family = stats::binomial(),
                 SL.library = SL.library),
            list(...))
-  if(is.null(args$parallel)){
-    args$parallel = "seq"
-  }
   args$type = NULL
-  sl <- do.call(SuperLearner, args[names(args) != "parallel"])
+  sl <- do.call(SuperLearner, args)
 
   phat <- predict.SuperLearner(object = sl, newdata = newdata,
                                X = X, Y = Y, TRUE)$pred
