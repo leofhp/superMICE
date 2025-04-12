@@ -13,7 +13,7 @@
 
 
 #Binary SuperLearner regression
-binarySuperLearner = function(y, x, wy, SL.library, ...){
+binarySuperLearner <- function(y, x, wy, SL.library, ...){
   newdata <- data.frame(x)
   colnames <- paste0("x", seq_len(ncol(newdata)))
   names(newdata) <- colnames
@@ -46,15 +46,15 @@ binarySuperLearner = function(y, x, wy, SL.library, ...){
   names(X) <- colnames
   Y <- as.numeric(yTemp)[!wy]
 
-  args = c(list(Y = Y, X = X, family = stats::binomial(),
+  args <- c(list(Y = Y, X = X, family = stats::binomial(),
                 SL.library = SL.library),
            list(...))
-  args$type = NULL
+  args$type <- NULL
   sl <- do.call(SuperLearner, args)
 
   phat <- predict.SuperLearner(object = sl, newdata = newdata,
                                X = X, Y = Y, TRUE)$pred
-  binaryImputations = stats::rbinom(length(phat[wy]), 1, phat[wy])
+  binaryImputations <- stats::rbinom(length(phat[wy]), 1, phat[wy])
   if(is.factor(y)){
     return(factor(levels(y)[binaryImputations + 1], levels = levels(y)))
   }

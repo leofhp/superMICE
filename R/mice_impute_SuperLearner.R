@@ -112,7 +112,7 @@
 #'
 #' @export
 
-mice.impute.SuperLearner = function(y, ry, x, wy = NULL, SL.library,
+mice.impute.SuperLearner <- function(y, ry, x, wy = NULL, SL.library,
                                     kernel = c("gaussian", "uniform",
                                                "triangular"),
                                     bw = c(0.1, 0.2, 0.25, 0.3, 0.5, 1, 2.5,
@@ -127,10 +127,10 @@ mice.impute.SuperLearner = function(y, ry, x, wy = NULL, SL.library,
   }
 
   if(length(unique(y)) == 2){
-    imps = binarySuperLearner(y, x, wy, SL.library, ...)
+    imps <- binarySuperLearner(y, x, wy, SL.library, ...)
   }
   else if(inherits(y, c("numeric", "integer"))){
-    imps = continuousSuperLearner(y, x, wy, SL.library, kernel = kernel,
+    imps <- continuousSuperLearner(y, x, wy, SL.library, kernel = kernel,
                                    bw = bw, bw.update = bw.update, ...)
   }
   else{

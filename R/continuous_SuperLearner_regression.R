@@ -51,7 +51,7 @@ continuousSuperLearner <- function(y, x, wy, SL.library, kernel, bw, bw.update, 
                      kernel = kernel)
         bw <- as.list(bw)
     }
-    p = parent.frame(2)
+    p <- parent.frame(2)
     p$args$bw <- bw
   }
   else{

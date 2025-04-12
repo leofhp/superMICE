@@ -18,21 +18,21 @@ localImputation <- function(i, preds, y, delta, bw = NULL,
                             kernel = c("gaussian", "uniform", "triangular")){
 
   if(kernel[1] == "gaussian"){
-    kernVals = gaussianKernel(x = preds, xcenter = preds[delta == 0][i],
+    kernVals <- gaussianKernel(x = preds, xcenter = preds[delta == 0][i],
                               bw = bw[[i]], lambda = NULL)
   }
   else if(kernel[1] == "uniform"){
-    kernVals = uniformKernel(x = preds, xcenter = preds[delta == 0][i],
+    kernVals <- uniformKernel(x = preds, xcenter = preds[delta == 0][i],
                              bw = bw[[i]], lambda = NULL)
   }
   else if(kernel[1] == "triangular"){
-    kernVals = triangularKernel(x = preds, xcenter = preds[delta == 0][i],
+    kernVals <- triangularKernel(x = preds, xcenter = preds[delta == 0][i],
                                 bw = bw[[i]], lambda = NULL)
   }
 
-  weights = kernVals / sum(kernVals)
-  pihat = sum(kernVals * delta) / sum(kernVals)
-  muhat = sum(weights * delta * y / pihat)
-  sig2hat = sum(weights * delta * y^2 / pihat) - muhat^2
+  weights <- kernVals / sum(kernVals)
+  pihat <- sum(kernVals * delta) / sum(kernVals)
+  muhat <- sum(weights * delta * y / pihat)
+  sig2hat <- sum(weights * delta * y^2 / pihat) - muhat^2
   rnorm(1, preds[delta == 0][i], sqrt(sig2hat))
 }
