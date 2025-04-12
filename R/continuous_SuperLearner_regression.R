@@ -23,10 +23,11 @@
 #Continuous SuperLearner
 continuousSuperLearner <- function(y, x, wy, SL.library, kernel, bw, bw.update, ...){
   newdata <- data.frame(x)
-  names(newdata) <- sapply(1:ncol(newdata), function(n){paste0("x", n)})
+  colnames <- paste0("x", seq_len(ncol(newdata)))
+  names(newdata) <- colnames
 
   X <- data.frame(x[!wy,])
-  names(X) <- sapply(1:ncol(newdata), function(n){paste0("x", n)})
+  names(X) <- colnames
   Y <- y[!wy]
 
   args <- c(list(Y = Y, X = X, family = stats::gaussian(),

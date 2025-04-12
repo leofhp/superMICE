@@ -15,7 +15,8 @@
 #Binary SuperLearner regression
 binarySuperLearner = function(y, x, wy, SL.library, ...){
   newdata <- data.frame(x)
-  names(newdata) <- sapply(1:ncol(newdata), function(n){paste0("x", n)})
+  colnames <- paste0("x", seq_len(ncol(newdata)))
+  names(newdata) <- colnames
 
   if(any(!(unique(y) %in% c(0,1)))){
     if(is.character(y)){
@@ -42,7 +43,7 @@ binarySuperLearner = function(y, x, wy, SL.library, ...){
   }
 
   X <- data.frame(x[!wy,])
-  names(X) <- sapply(1:ncol(newdata), function(n){paste0("x", n)})
+  names(X) <- colnames
   Y <- as.numeric(yTemp)[!wy]
 
   args = c(list(Y = Y, X = X, family = stats::binomial(),
