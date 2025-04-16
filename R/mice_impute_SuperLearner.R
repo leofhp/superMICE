@@ -127,7 +127,7 @@ mice.impute.SuperLearner <- function(y, ry, x, wy = NULL, SL.library,
     wy <- !ry
   }
 
-  if(length(unique(y)) == 2){
+  if(length(unique(na.omit(y))) == 2){
     imps <- binarySuperLearner(y, x, wy, SL.library, ...)
   }
   else if(inherits(y, c("numeric", "integer"))){
